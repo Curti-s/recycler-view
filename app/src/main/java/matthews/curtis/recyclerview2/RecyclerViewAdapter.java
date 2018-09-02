@@ -1,6 +1,7 @@
 package matthews.curtis.recyclerview2;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,12 +20,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
     private static final String TAG = "RecyclerViewAdapter";
-    private Context context;
+    private Context mContext;
     private ArrayList<String> mImageNames = new ArrayList<>();
     private ArrayList<String> mImages = new ArrayList<>();
 
     public RecyclerViewAdapter(Context context, ArrayList<String> imageNames, ArrayList<String> images) {
-        this.context = context;
+        this.mContext = context;
         mImageNames = imageNames;
         mImages = images;
     }
@@ -41,7 +42,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG,"onBindViewHolder: called");
-        Glide.with(context)
+        Glide.with(mContext)
                 .asBitmap()
                 .load(mImages.get(position))
                 .into(holder.image);
@@ -49,7 +50,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context,mImageNames.get(position), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,mImageNames.get(position), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext,GalleryActivity.class);
+                intent.putExtra("image_url",mImages.get(position));
+                intent.putExtra("image_names",mImageNames.get(position));
+                mContext.startActivity(intent);
             }
         });
     }
